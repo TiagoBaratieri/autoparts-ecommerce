@@ -8,12 +8,14 @@ import org.baratieri.tbdistribuidoraauto.repository.PecaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 public class PecaService {
 
     @Autowired
@@ -21,25 +23,26 @@ public class PecaService {
     @Autowired
     private CategoriaRepository categoriaRepository;
 
-    public List<Peca> listarPecas() {
-        return repository.findAll();
+    public List<PecaDTO> listarPecas() {
+        return repository.findAll()
+                .stream()
+                .map(PecaDTO::fromEntity)
+                .toList();
     }
 
-    public Peca buscarPeca(Long id) {
-        Optional<Peca> peca = repository.findById(id);
-        return peca.orElse(null);
+    public PecaDTO buscarPeca(Long id) {
+        Optional<Peca> obj = repository.findById(id);
+        Peca peca = obj.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Peça não encontrdas"));
+        return PecaDTO.fromEntity(peca);
     }
 
-    public Peca cadastrarPeca(PecaDTO dto) {
-        // 1. Validar/Buscar Categoria
+    public PecaDTO cadastrarPeca(PecaDTO dto) {
         Categoria categoria = categoriaRepository.findById(dto.categoriaId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Categoria não encontrada"));
-
-        // 2. Converter DTO -> Entidade
         Peca novaPeca = dto.toEntity(categoria);
 
-        // 3. Salvar e retornar a Entidade
-        return repository.save(novaPeca);
+        Peca pecaSalva = repository.save(novaPeca);
+        return PecaDTO.fromEntity(pecaSalva);
 
     }
 }

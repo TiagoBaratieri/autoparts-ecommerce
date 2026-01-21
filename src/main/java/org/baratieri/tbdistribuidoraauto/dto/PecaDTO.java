@@ -8,7 +8,8 @@ import org.baratieri.tbdistribuidoraauto.entity.Peca;
 
 import java.math.BigDecimal;
 
-public record PecaDTO(@NotBlank(message = "O nome é obrigatório")
+public record PecaDTO(Long id,
+                      @NotBlank(message = "O nome é obrigatório")
                       String nome,
 
                       @NotBlank(message = "O SKU é obrigatório")
@@ -41,6 +42,7 @@ public record PecaDTO(@NotBlank(message = "O nome é obrigatório")
     // Método estático: PecaDTO.fromEntity(peca)
     public static PecaDTO fromEntity(Peca peca) {
         return new PecaDTO(
+                peca.getId(),
                 peca.getNome(),
                 peca.getSku(),
                 peca.getPartNumber(),
