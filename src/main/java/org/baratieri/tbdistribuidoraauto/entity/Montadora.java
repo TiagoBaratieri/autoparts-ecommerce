@@ -1,5 +1,6 @@
 package org.baratieri.tbdistribuidoraauto.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Montadora {
     @Column(name = "pais_origem") // Mapeia camelCase do Java para snake_case do Banco
     private String paisOrigem;
     @OneToMany(mappedBy = "montadora")
+    @JsonIgnore
     private List<ModeloVeiculo> modelos = new ArrayList<>();
 
 }
