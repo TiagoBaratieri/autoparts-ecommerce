@@ -29,23 +29,23 @@ public class CompatibilidadeService {
     @Autowired
     private PecaRepository pecaRepository;
 
-    public List<Compatibilidade> buscarPecasPorCarro(Long modeloId) {
+    public List<CompatibilidadeDTO> buscarPecasPorCarro(Long modeloId) {
         if (!modeloVeiculoRepository.existsById(modeloId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Veículo não encontrado com ID: " + modeloId);
         }
-        
-        return repository.findByModeloVeiculoId(modeloId);
+
+        return repository.findByModeloVeiculoId(modeloId).stream()
+                .map(CompatibilidadeDTO::fromEntity).toList();
     }
 
-    public Compatibilidade cadastrar(CompatibilidadeDTO dto) {
+    public CompatibilidadeDTO cadastrar(CompatibilidadeDTO dto) {
         Peca peca = pecaRepository.findById(dto.pecaId()).
                 orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Peca inexistente"));
 
         ModeloVeiculo modelo = modeloVeiculoRepository.findById(dto.modeloId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Modelo inexistente"));
         Compatibilidade novaCompatibilidade = dto.toEntity(peca, modelo);
-        return repository.save(novaCompatibilidade);
-
+        return CompatibilidadeDTO.fromEntity(novaCompatibilidade);
 
     }
 }

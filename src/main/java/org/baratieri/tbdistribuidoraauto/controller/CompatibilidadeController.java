@@ -22,19 +22,19 @@ public class CompatibilidadeController {
     @Autowired
     private CompatibilidadeService service;
 
-    // URL final: /api/compatibilidades/veiculo/1
+   
     @GetMapping("/veiculo/{modeloId}")
-    public List<Compatibilidade> listarPorCarro(@PathVariable Long modeloId) {
+    public List<CompatibilidadeDTO> listarPorCarro(@PathVariable Long modeloId) {
         return service.buscarPecasPorCarro(modeloId);
     }
 
     @PostMapping
-    public ResponseEntity<Compatibilidade> cadastrar(@RequestBody @Valid CompatibilidadeDTO dto,
+    public ResponseEntity<CompatibilidadeDTO> cadastrar(@RequestBody @Valid CompatibilidadeDTO dto,
                                                      UriComponentsBuilder uriBuilder) {
-        Compatibilidade salva = service.cadastrar(dto);
+        CompatibilidadeDTO salva = service.cadastrar(dto);
 
         URI uri = uriBuilder.path("/api/compatibilidades/{id}")
-                .buildAndExpand(salva.getId()).toUri();
+                .buildAndExpand(salva.id()).toUri();
 
         return ResponseEntity.created(uri).body(salva);
     }

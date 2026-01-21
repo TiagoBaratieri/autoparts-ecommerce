@@ -5,7 +5,8 @@ import org.baratieri.tbdistribuidoraauto.entity.Compatibilidade;
 import org.baratieri.tbdistribuidoraauto.entity.ModeloVeiculo;
 import org.baratieri.tbdistribuidoraauto.entity.Peca;
 
-public record CompatibilidadeDTO(@NotNull Long pecaId,
+public record CompatibilidadeDTO(Long id,
+                                 @NotNull Long pecaId,
                                  @NotNull Long modeloId,
                                  @NotNull Integer anoInicio,
                                  @NotNull Integer anoFim,
@@ -19,5 +20,16 @@ public record CompatibilidadeDTO(@NotNull Long pecaId,
         compatibilidade.setAnoFim(anoFim);
         compatibilidade.setObservacao(observacao);
         return compatibilidade;
+    }
+
+    public static CompatibilidadeDTO fromEntity(Compatibilidade compatibilidade){
+        return new CompatibilidadeDTO(
+                compatibilidade.getId(),
+                compatibilidade.getPeca().getId(),
+                compatibilidade.getModeloVeiculo().getId(),
+                compatibilidade.getAnoInicio(),
+                compatibilidade.getAnoFim(),
+                compatibilidade.getObservacao()
+        );
     }
 }
