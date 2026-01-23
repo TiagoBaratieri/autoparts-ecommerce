@@ -2,7 +2,7 @@ package org.baratieri.tbdistribuidoraauto.controller;
 
 import jakarta.validation.Valid;
 import org.baratieri.tbdistribuidoraauto.dto.CompatibilidadeDTO;
-import org.baratieri.tbdistribuidoraauto.entity.Compatibilidade;
+
 import org.baratieri.tbdistribuidoraauto.service.CompatibilidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +22,7 @@ public class CompatibilidadeController {
     @Autowired
     private CompatibilidadeService service;
 
-   
+
     @GetMapping("/veiculo/{modeloId}")
     public List<CompatibilidadeDTO> listarPorCarro(@PathVariable Long modeloId) {
         return service.buscarPecasPorCarro(modeloId);
